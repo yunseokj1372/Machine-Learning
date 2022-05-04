@@ -186,7 +186,35 @@ class AffineNode(object):
         x: node for which x.out is a numpy array of shape (d)
         b: node for which b.out is a numpy array of shape (m) (i.e. vector of length m)
     """
-    pass
+    def __init__(self, x, W, b, node_name):
+        self.node_name = node_name
+        self.out = None
+        self.d_out = None
+        self.x = x
+        self.W = W
+        self.b = b
+
+
+    def forward(self):
+        # Your code
+        self.out = self.W.out @ self.x.out.T + self.b.out
+        self.d_out = np.zeros(self.out.shape)
+        return self.out
+
+    def backward(self):
+        # Your code
+        d_W = self.d_out.T @ self.x.out
+        d_b = self.d_out * 1
+        d_x = 
+        self.W.d_out += d_W
+        self.b.d_out += d_b
+        self.x.d_out += d_x
+
+        return self.d_out
+
+    def get_predecessors(self):
+        # Your code
+        return [self.W,self.b, self.x]
 
 
 class TanhNode(object):

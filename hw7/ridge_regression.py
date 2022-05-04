@@ -24,7 +24,7 @@ class RidgeRegression(BaseEstimator, RegressorMixin):
         self.outcomes = [self.y]
         self.parameters = [self.w, self.b]
         self.reg = nodes.L2NormPenaltyNode(l2_reg=l2_reg, w = self.w, node_name="regularization")
-        self.comb = nodes.SumNode(a= self.prediction, b= self.reg)
+        self.comb = nodes.SumNode(a= self.prediction, b= self.reg, node_name= "sum")
 
         self.objective = nodes.SquaredL2DistanceNode(a=self.comb, b=self.y,
                                                node_name="square loss")
