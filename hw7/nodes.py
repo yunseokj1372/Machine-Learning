@@ -241,7 +241,24 @@ class SoftmaxNode(object):
         Parameters:
         z: node for which z.out is a numpy array
     """
+    def __init__(self, z, node_name):
+        self.node_name = node_name
+        self.out = None
+        self.d_out = None
+        self.z = z
 
+    def forward(self):
+        self.out = np.exp(self.z.out)/(np.sum(np.exp(self.z.out)))
+        self.d_out = np.zeros(self.out.shape)
+        return self.out
+
+    def backward(self):
+        d_z = self.d_out @ (self.out * np.identity(self.out.size)- self.out.T@ self.out)
+        self.z.d_out += d_z
+        return self.d_out
+
+    def get_predecessors(self):
+        return [self.z]
 
 
 class NLLNode(object):

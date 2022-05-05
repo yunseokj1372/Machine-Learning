@@ -19,7 +19,6 @@ class RidgeRegression(BaseEstimator, RegressorMixin):
         self.prediction = nodes.VectorScalarAffineNode(x=self.x, w=self.w, b=self.b,
                                                  node_name="prediction")
         # Build computation graph
-        # TODO: ADD YOUR CODE HERE
         self.inputs = [self.x]
         self.outcomes = [self.y]
         self.parameters = [self.w, self.b]
@@ -30,7 +29,7 @@ class RidgeRegression(BaseEstimator, RegressorMixin):
                                                node_name="square loss")
         
         self.graph = graph.ComputationGraphFunction(self.inputs, self.outcomes,
-                                                          self.parameters, self.prediction,
+                                                          self.parameters, self.comb,
                                                           self.objective)
         
     def fit(self, X, y):

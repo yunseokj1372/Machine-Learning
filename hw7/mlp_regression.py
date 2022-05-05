@@ -18,7 +18,31 @@ class MLPRegression(BaseEstimator, RegressorMixin):
         self.step_size = step_size
 
         # Build computation graph
-        # TODO: ADD YOUR CODE HERE
+        self.x = nodes.ValueNode(node_name="x") 
+        self.y = nodes.ValueNode(node_name="y") 
+        self.W1 = nodes.ValueNode(node_name="W1") 
+        self.b1 = nodes.ValueNode(node_name="b1")
+        self.w2 = nodes.ValueNode(node_name="w2") 
+        self.b2 = nodes.ValueNode(node_name="b2")
+        self.inputs = [self.x]
+        self.outcomes = [self.y]
+        self.parameters = [self.W1,self.w2, self.b1, self.b2] 
+
+
+        self.prediction = nodes.AffineNode(x=self.x, W=self.W1, b=self.b1,
+                                                 node_name="prediction")
+        self.activation = nodes.TanhNode(x = self.prediction, node_name= "activation")
+
+        self.new_pred = nodes.VectorScalarAffineNode(x=self.activation, w=self.w2, b=self.b2,
+                                                 node_name="prediction")
+
+
+        self.objective = nodes.SquaredL2DistanceNode(a=self.new_pred, b=self.y,
+                                               node_name="square loss")
+        
+        self.graph = graph.ComputationGraphFunction(self.inputs, self.outcomes,
+                                                          self.parameters, self.new_pred,
+                                                          self.objective)
 
     def fit(self, X, y):
         num_instances, num_ftrs = X.shape
